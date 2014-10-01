@@ -1,0 +1,80 @@
+<html>
+<head>
+<script src='client/js/jquery-1.11.1.min.js'></script>
+<script src='client/js/todo.client.js'></script>
+
+<script>
+	var apitoken = null;
+	var id = 0;
+	function CreateUser(email,password){
+		Todo.createUser({
+    	email:    email,
+    	password: password,
+    	success:  function(user) { alert('user create success!') },
+    	error:    function(xhr)  { alert('user create error!') }
+  		});
+	}
+
+	function startSession(email,password){
+	    Todo.startSession({
+  		email:    email,
+  		password: password,
+  		success:  function(user) { 
+  			apitoken = user.api_token;
+  			alert(user.api_token);
+  			id = user.id;
+  			Todo.USER = user;
+  		},
+  		error:    function(xhr)  { alert('login error!') }
+    	});
+    	//createTodo("hello!");
+	}
+
+	function endSession(){
+	    Todo.endSession({
+      	success: function(todo) { alert('logout success!') },
+      	error:   function(xhr)  { alert('logout error!') }
+    	});
+	}
+
+	function loadTodos(){
+		Todo.loadTodos({
+    	success: function(todos) {
+    	alert(todos[1].description);
+    	alert(todos.length);
+    	},
+		error:   function(xhr)   { alert('todo load error!') }
+    	});
+    	
+	}
+
+	function updateTodo(todoId){
+		Todo.updateTodo({
+     	todoId: todoId,
+      	data: { is_complete: "no" },
+      	success: function(todo) { alert('todo update success!') },
+      	error:   function(xhr)  { alert('todo update error!') }
+    	});
+
+	}
+
+	function createTodo(describer){
+		Todo.createTodo({
+			description: describer,
+			user_id: id,
+			success: function(todo){ alert("todo created") },
+			error: function(xhr) { alert("todo not created") }
+		});
+	  	//loadTodos();				
+	}
+
+	startSession("jsuresh2@illinois.edu","crazyeights");
+</script>
+
+<a href="javascript:createTodo('hello!')">Create Todo!</a>
+<a href="javascript:loadTodos()">Load Todos!</a>
+<a href="javascript:updateTodo(1)">Update Todos!></a>
+<a href="javascript:endSession()">End Session</a>
+
+
+</head>
